@@ -11,7 +11,9 @@ The tool needs the location of your hdfs system. We currently only support the "
 
 Pass the config as a file by mounting it as a volume when running the container: 
 
-  "-v /home/user/config.tar.gz:/config.tar.gz"
+```
+"-v /home/user/config.tar.gz:/config.tar.gz"
+```
 
 ## Username
 
@@ -23,23 +25,30 @@ The hdfs user needs to be specified as the first argument of the docker run comm
 
 Build this image as follows.
 
-  docker build -t nlesc/hdfs-dfs-client .
-
+```
+docker build -t nlesc/hdfs-dfs-client .
+```
 ## Examples
 
 ### Get help
 
-  docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> 
-
+```
+docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> 
+```
 ### List a folder
 
-  docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> -ls /
-
+```
+docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> -ls /
+```
 ### Upload a folder
 
-  docker run -v <config_file_location>:/config.tar.gz -v <source_folder>:/input nlesc/hdfs-dfs-client <hdfs_username> -put /input <hdfs_target-folder>
+```
+docker run -v <config_file_location>:/config.tar.gz -v <source_folder>:/input nlesc/hdfs-dfs-client <hdfs_username> -put /input <hdfs_target-folder>
+```
 
 e.g.
 
-  docker run -v /home/myuser/config.tar.gz:/config.tar.gz -v /home/myuser/data:/input nlesc/hdfs-dfs-client myuser -put /input /user/myuser/data
+```
+docker run -v /home/myuser/config.tar.gz:/config.tar.gz -v /home/myuser/data:/input nlesc/hdfs-dfs-client myuser -put /input /user/myuser/data
+```
 
