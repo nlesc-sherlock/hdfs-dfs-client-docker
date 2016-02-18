@@ -1,30 +1,45 @@
-# hdfs-ingest-docker
-Docker-based tool capable of uploading files to a remote hdfs cluster
+# hdfs-dfs-client-docker
+Docker-based tool capable of interacting with a remote hdfs filesystem
 
-This tool (wrapped in a docker image for convienence) can be used to upload files to a remote hdfs instance (usually a cluster).
+This tool (wrapped in a docker image for convienence) runs the yarn/hadoop "hdfs dfs" client subcommand. It can be used to e.g. upload files to a hdfs instance (usually a cluster).
 
-Example Usage:
+This image is available on dockerhub as nlesc/hdfs-dfs-client
 
-docker run -v /home/user/config.tar.gz:/config.tar.gz -v /source/folder:/input nlesc/hdfs-ingest /hdfs/destination/folder
-
-Explanation:
-
-"docker run"
-
-Command to run this image.
-
-"-v /home/user/config.tar.gz:/config.tar.gz"
+## Config file
 
 The tool needs the location of your hdfs system. We currently only support the "client configs" format as produced by Ambari (in the web interface under HDFS->Service Actions -> Download Client Configs". This is a .tar.gz archive with standard hadoop configuration files.
 
-"-v /source/folder:/input"
+Pass the config as a file by mounting it as a volume when running the container: 
 
-Folder containing the files you would like to ingest. We only support uploading the entire content of a folder.
+  "-v /home/user/config.tar.gz:/config.tar.gz"
 
-"nlesc/hdfs-ingest"
+## Username
 
-Name of the image. In this case the name of the image on dockerhub.
+We assume you are using "simple authentication", where the local user on the client side determines the hdfs user (and thus if you have access).
 
-"/hdfs/destination/folder"
+The hdfs user needs to be specified as the first argument of the docker run command
 
-Destination of the files inside of hdfs.
+## Build
+
+Build this image as follows.
+
+  docker build -t nlesc/hdfs-dfs-client .
+
+## Examples
+
+### Get help
+
+  docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> 
+
+### List a folder
+
+  docker run -v <config_file_location>:/config.tar.gz nlesc/hdfs-dfs-client <hdfs_username> -ls /
+
+### Upload a folder
+
+  docker run -v <config_file_location>:/config.tar.gz -v <source_folder>:/input nlesc/hdfs-dfs-client <hdfs_username> -put /input <hdfs_target-folder>
+
+e.g.
+
+  docker run -v /home/myuser/config.tar.gz:/config.tar.gz -v /home/myuser/data:/input nlesc/hdfs-dfs-client myuser -put /input /user/myuser/data
+
